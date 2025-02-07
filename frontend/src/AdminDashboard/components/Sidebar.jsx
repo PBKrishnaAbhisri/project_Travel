@@ -7,7 +7,6 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         { id: 'statistics', label: 'Dashboard', icon: '📊' },
         { id: 'featured', label: 'Featured Tours', icon: '🌟' },
         { id: 'packages', label: 'Packages/Offers', icon: '📦' },
-        { id: 'users', label: 'Users', icon: '👥' },
         { id: 'bookings', label: 'Bookings', icon: '📅' },
     ];
 
