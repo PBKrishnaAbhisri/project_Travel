@@ -1,0 +1,30 @@
+.featured-tours {
+    padding: 1rem;
+}
+
+.featured-tours h2 {
+    margin-bottom: 2rem;
+    color: var(--heading-color);
+}
+
+.featured-tours table {
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.featured-tours th {
+    background-color: #f8f9fa;
+    color: var(--heading-color);
+}
+
+.featured-tours td {
+    vertical-align: middle;
+}
+
+.badge {
+    padding: 0.5rem 1rem;
+}
+
+.btn {
+    margin: 0 0.25rem;
+} 
