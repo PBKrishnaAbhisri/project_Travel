@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, CardBody } from 'reactstrap';
 import './admin-dashboard.css';
 import Sidebar from './components/Sidebar';
 import FeaturedTours from './components/FeaturedTours';
 import Packages from './components/Packages';
 import Statistics from './components/Statistics';
+import { BASE_URL } from "../utils/config";
 
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('statistics');

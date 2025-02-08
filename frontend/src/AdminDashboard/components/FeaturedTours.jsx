@@ -142,6 +142,40 @@ const FeaturedTours = () => {
         }
     };
 
+    const handleDelete = async (tourId) => {
+        if (!checkAdminAuth()) return;
+
+        if (!window.confirm('Are you sure you want to delete this tour?')) {
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('adminToken');
+            const res = await fetch(`${BASE_URL}/tours/${tourId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.message || 'Failed to delete tour');
+            }
+
+            fetchTours();
+            setSuccess('Tour deleted successfully');
+            setTimeout(() => setSuccess(null), 3000);
+        } catch (error) {
+            console.error('Error deleting tour:', error);
+            setError(error.message);
+            if (error.message.includes('token')) {
+                setTimeout(() => navigate('/admin/login'), 2000);
+            }
+            setTimeout(() => setError(null), 3000);
+        }
+    };
+
     return (
         <div className="featured-tours">
             <div className="featured-tours-header">
@@ -171,7 +205,7 @@ const FeaturedTours = () => {
                             <th>City</th>
                             <th>Price</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -186,13 +220,23 @@ const FeaturedTours = () => {
                                     </Badge>
                                 </td>
                                 <td>
-                                    <Button
-                                        color={tour.featured ? 'danger' : 'success'}
-                                        size="sm"
-                                        onClick={() => toggleFeatured(tour._id, tour.featured)}
-                                    >
-                                        {tour.featured ? 'Remove' : 'Add'} Featured
-                                    </Button>
+                                    <div className="action-buttons">
+                                        <Button
+                                            color={tour.featured ? 'danger' : 'success'}
+                                            size="sm"
+                                            className="mr-2"
+                                            onClick={() => toggleFeatured(tour._id, tour.featured)}
+                                        >
+                                            {tour.featured ? 'Remove' : 'Add'} Featured
+                                        </Button>
+                                        <Button
+                                            color="danger"
+                                            size="sm"
+                                            onClick={() => handleDelete(tour._id)}
+                                        >
+                                            <i className="ri-delete-bin-line"></i> Delete
+                                        </Button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

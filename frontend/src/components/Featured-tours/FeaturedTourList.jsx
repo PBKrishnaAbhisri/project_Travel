@@ -32,20 +32,18 @@ const FeaturedTourList = () => {
    ];
 
    return (
-      <>
+      <div className="services__container">
          {services.map((service, index) => (
-            <Col lg='2' md='6' sm='6' className='mb-4' key={index}>
-               <div className='service__card'>
-                  <div className='service__icon'>
-                     <i className={service.icon}></i>
-                  </div>
-                  <h5 className='service__title'>{service.title}</h5>
-                  <p className='service__desc'>{service.desc}</p>
+            <div className='service__card' key={index}>
+               <div className='service__icon'>
+                  <i className={service.icon}></i>
                </div>
-            </Col>
+               <h5 className='service__title'>{service.title}</h5>
+               <p className='service__desc'>{service.desc}</p>
+            </div>
          ))}
-      </>
+      </div>
    )
 }
 
-export default FeaturedTourList 
+export default FeaturedTourList
