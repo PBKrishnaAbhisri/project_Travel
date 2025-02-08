@@ -17,3 +17,8 @@
    background: var(--secondary-color);
    color     : #fff !important;
 }
+/* .pagination span:hover {
+   background: var(--secondary-color);
+   color: #fff;
+   transform: scale(1.1);
+} */

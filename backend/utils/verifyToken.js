@@ -51,15 +51,15 @@ export const verifyAdmin = (req, res, next) => {
    const token = authHeader.split(' ')[1];
    
    try {
-      // For admin token, we'll do a simple check since we're using a basic token system
-      const decodedString = atob(token);
+      // Decode base64 token
+      const decodedString = Buffer.from(token, 'base64').toString('utf-8');
       const [prefix, email] = decodedString.split(':');
       
       if (prefix !== 'admin' || email !== 'krishnaabhisripg@gmail.com') {
-         throw new Error('Invalid admin token');
+         throw new Error('Invalid admin credentials');
       }
       
-      req.user = { role: 'admin' };
+      req.user = { role: 'admin', email };
       next();
    } catch (error) {
       return res.status(401).json({

@@ -21,17 +21,22 @@ const AdminLogin = () => {
         setLoading(true);
         setError('');
 
-        // Admin credentials validation
-        if (credentials.email === "krishnaabhisripg@gmail.com" && credentials.password === "12345") {
-            // Generate a simpler admin token
-            const token = btoa('admin:krishnaabhisripg@gmail.com');
-            localStorage.setItem('adminToken', token);
-            localStorage.setItem('isAdmin', 'true');
-            navigate('/admin/dashboard');
-        } else {
-            setError('Invalid email or password');
+        try {
+            // Admin credentials validation
+            if (credentials.email === "krishnaabhisripg@gmail.com" && credentials.password === "12345") {
+                // Generate admin token
+                const token = btoa(`admin:${credentials.email}`);
+                localStorage.setItem('adminToken', token);
+                localStorage.setItem('isAdmin', 'true');
+                navigate('/admin/dashboard');
+            } else {
+                setError('Invalid email or password');
+            }
+        } catch (err) {
+            setError('Login failed. Please try again.');
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (

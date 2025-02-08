@@ -32,8 +32,15 @@ const TourDetails = () => {
 
       try {
          if (!user || user === undefined || user === null) {
-            alert('Please sign in')
+            alert('Please sign in to submit a review')
+            return
          }
+         if (!tourRating) {
+            alert('Please select a rating')
+            return
+         }
+
+         const token = localStorage.getItem('token')
          const reviewObj = {
             username: user?.username,
             reviewText,
@@ -43,9 +50,9 @@ const TourDetails = () => {
          const res = await fetch(`${BASE_URL}/review/${id}`, {
             method: 'post',
             headers: {
-               'content-type': 'application/json'
+               'content-type': 'application/json',
+               'Authorization': `Bearer ${token}`
             },
-            credentials: 'include',
             body: JSON.stringify(reviewObj)
          })
 
@@ -53,7 +60,13 @@ const TourDetails = () => {
          if (!res.ok) {
             return alert(result.message)
          }
-         alert(result.message)
+
+         // Clear form and rating after successful submission
+         reviewMsgRef.current.value = ''
+         setTourRating(null)
+         alert('Review submitted successfully!')
+         // Refresh the page to show new review
+         window.location.reload()
       } catch (error) {
          alert(error.message)
       }
@@ -102,17 +115,29 @@ const TourDetails = () => {
 
                            <Form onSubmit={submitHandler}>
                               <div className="d-flex align-items-center gap-3 mb-4 rating__group">
-                                 <span onClick={() => setTourRating(1)}>1 <i class='ri-star-s-fill'></i></span>
-                                 <span onClick={() => setTourRating(2)}>2 <i class='ri-star-s-fill'></i></span>
-                                 <span onClick={() => setTourRating(3)}>3 <i class='ri-star-s-fill'></i></span>
-                                 <span onClick={() => setTourRating(4)}>4 <i class='ri-star-s-fill'></i></span>
-                                 <span onClick={() => setTourRating(5)}>5 <i class='ri-star-s-fill'></i></span>
+                                 {[1, 2, 3, 4, 5].map((num) => (
+                                    <span 
+                                       key={num} 
+                                       onClick={() => setTourRating(num)}
+                                       className={`rating__button ${tourRating === num ? 'active' : ''}`}
+                                    >
+                                       {num} <i className='ri-star-s-fill'></i>
+                                    </span>
+                                 ))}
                               </div>
 
                               <div className="review__input">
-                                 <input type="text" ref={reviewMsgRef} placeholder='share your thoughts' required />
-                                 <button className='btn primary__btn text-white' type='submit'>
-                                    Submit
+                                 <input 
+                                    type="text" 
+                                    ref={reviewMsgRef} 
+                                    placeholder='Share your thoughts...' 
+                                    required 
+                                 />
+                                 <button 
+                                    className='btn primary__btn text-white' 
+                                    type='submit'
+                                 >
+                                    Submit Review
                                  </button>
                               </div>
                            </Form>

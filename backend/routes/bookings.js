@@ -1,6 +1,6 @@
 import express from 'express'
 import { createBooking, getAllBooking, getBooking } from '../controllers/bookingController.js'
-import { verifyUser } from '../utils/verifyToken.js'
+import { verifyUser, verifyAdmin } from '../utils/verifyToken.js'
 
 const router = express.Router()
 
@@ -10,7 +10,7 @@ router.post('/create', verifyUser, createBooking)
 // Get single booking
 router.get('/:id', verifyUser, getBooking)
 
-// Get all bookings
-router.get('/', verifyUser, getAllBooking)
+// Get all bookings (admin only)
+router.get('/', verifyAdmin, getAllBooking)
 
 export default router

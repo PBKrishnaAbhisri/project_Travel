@@ -4,19 +4,31 @@ import Booking from './../models/Booking.js'
 // create new booking
 export const createBooking = async(req, res) => {
     try {
-        const userId = req.user.id; // Get userId from verified token
-        
+        const userId = req.user.id;
         const newBooking = new Booking({
             ...req.body,
-            userId: userId // Ensure we use the userId from the token
+            userId: userId,
+            bookingDate: new Date(),
+            status: 'confirmed'
         });
 
         const savedBooking = await newBooking.save();
 
+        // Populate user details
+        const populatedBooking = await Booking.findById(savedBooking._id)
+            .populate({
+                path: 'userId',
+                select: 'username email'
+            })
+            .populate({
+                path: 'tourId',
+                select: 'title city price'
+            });
+
         res.status(200).json({
             success: true,
-            message: "Your package is booked!",
-            data: savedBooking
+            message: "Your tour is booked!",
+            data: populatedBooking
         });
     } catch (err) {
         console.error('Booking error:', err);
@@ -41,14 +53,34 @@ export const getBooking = async(req,res) => {
 } 
 
 
-// get all booking
-export const getAllBooking = async(req,res) => {
-   
-   try {
-      const books = await Booking.find()
+// get all bookings for dashboard
+export const getAllBooking = async(req, res) => {
+    try {
+        const books = await Booking.find()
+            .populate('userId', 'username email')
+            .populate('tourId', 'title city price')
+            .sort({ createdAt: -1 });
 
-      res.status(200).json({success:true, message:"Successful!", data:books})
-   } catch (error) {
-      res.status(500).json({success:true, message:"Internal server error!"})
-   }
-} 
+        // Calculate statistics
+        const totalBookings = books.length;
+        const totalRevenue = books.reduce((sum, booking) => sum + (booking.price || 0), 0);
+        const recentBookings = books.slice(0, 5);
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully fetched bookings",
+            data: {
+                totalBookings,
+                totalRevenue,
+                recentBookings,
+                allBookings: books
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching bookings:', error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch bookings"
+        });
+    }
+}; 
