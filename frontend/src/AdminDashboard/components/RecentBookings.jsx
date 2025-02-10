@@ -101,14 +101,14 @@ const RecentBookings = () => {
                                 <td>
                                     <div className="user-info">
                                         <span className="username">
-                                            {booking.userId?.username || 'N/A'}
+                                            {booking.fullName || booking.userId?.fullName || booking.userId?.username || booking.username || 'N/A'}
                                         </span>
                                         <span className="email">
-                                            {booking.userId?.email || 'N/A'}
+                                            {booking.email || booking.userId?.email || 'N/A'}
                                         </span>
                                     </div>
                                 </td>
-                                <td>{booking.tourId?.title || 'N/A'}</td>
+                                <td>{booking.tourName || booking.tourId?.title || 'N/A'}</td>
                                 <td>${booking.price?.toFixed(2) || '0.00'}</td>
                                 <td>
                                     {new Date(booking.createdAt).toLocaleDateString()}
