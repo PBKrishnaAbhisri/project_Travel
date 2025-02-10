@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Card, CardBody, Table } from 'reactstrap';
+import { Row, Col, Card, CardBody } from 'reactstrap';
 import { BASE_URL } from '../../utils/config';
 import './statistics.css';
 
 const Statistics = () => {
     const [stats, setStats] = useState({
         totalBookings: 0,
-        totalRevenue: 0,
-        recentBookings: [],
-        allBookings: []
+        totalRevenue: 0
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -43,9 +41,7 @@ const Statistics = () => {
             if (data.success) {
                 setStats({
                     totalBookings: data.data.totalBookings || 0,
-                    totalRevenue: data.data.totalRevenue || 0,
-                    recentBookings: data.data.recentBookings || [],
-                    allBookings: data.data.allBookings || []
+                    totalRevenue: data.data.totalRevenue || 0
                 });
             } else {
                 throw new Error(data.message || 'Failed to fetch statistics');
@@ -114,49 +110,6 @@ const Statistics = () => {
                     </Card>
                 </Col>
             </Row>
-
-            <h3 className="mt-5 mb-4">Recent Bookings</h3>
-            {stats.recentBookings.length > 0 ? (
-                <Table responsive className="recent-bookings-table">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Tour</th>
-                            <th>Price</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {stats.recentBookings.map((booking, index) => (
-                            <tr key={booking._id || index}>
-                                <td>
-                                    <div className="user-info">
-                                        <span className="username">
-                                            {booking.userId?.username || 'N/A'}
-                                        </span>
-                                        <span className="email">
-                                            {booking.userId?.email || 'N/A'}
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>{booking.tourId?.title || 'N/A'}</td>
-                                <td>${booking.price?.toFixed(2) || '0.00'}</td>
-                                <td>
-                                    {new Date(booking.createdAt).toLocaleDateString()}
-                                </td>
-                                <td>
-                                    <span className={`status-badge ${booking.status?.toLowerCase() || 'pending'}`}>
-                                        {booking.status || 'Pending'}
-                                    </span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            ) : (
-                <p className="text-center">No recent bookings found</p>
-            )}
         </div>
     );
 };

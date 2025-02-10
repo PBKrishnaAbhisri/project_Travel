@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import FeaturedTours from './components/FeaturedTours';
 import Packages from './components/Packages';
 import Statistics from './components/Statistics';
+import Bookings from './components/RecentBookings';
 import { BASE_URL } from "../utils/config";
 
 const AdminDashboard = () => {
@@ -18,6 +19,8 @@ const AdminDashboard = () => {
                 return <FeaturedTours />;
             case 'packages':
                 return <Packages />;
+            case 'bookings':
+                return <Bookings/>
             default:
                 return <Statistics />;
         }
